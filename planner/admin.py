@@ -1,3 +1,4 @@
 from django.contrib import admin
+from .models import Document, Chapter, Task, Deadline, Milestone
 
-# Register your models here.
+admin.site.register(Document)

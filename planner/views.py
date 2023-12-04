@@ -9,3 +9,8 @@ def home(request):
     }
     return render(request, 'planner/home.html', context)
 
+def planning(request):
+    context = {
+    }
+    return render(request, 'planner/home.html', context)
+
