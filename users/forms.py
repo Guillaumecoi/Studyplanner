@@ -23,7 +23,6 @@ class UserRegisterForm(UserCreationForm):
     def save(self, commit=True):
         user = super(UserRegisterForm, self).save(commit=False)
         user.username = self.cleaned_data['email']
-        user.is_active = False  # Deactivate account till it is confirmed
         if commit:
             user.save()
         return user
