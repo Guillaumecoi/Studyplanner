@@ -9,7 +9,7 @@ def home(request):
         return redirect('login')
     
     context = {
-        'documents': Document.objects.all()
+        'documents': Document.objects.filter(user=request.user)
     }
     return render(request, 'planner/home.html', context)
 
