@@ -1,0 +1,12 @@
+{% extends "planner/base.html" %}
+{% block content %}
+    <article class="media content-section">
+        <div class="media-body">
+            <h2 class"article-title"> {{ object.title }} </h2>
+            <p class="article-metadata">by {{ object.instructor }}</p>
+            <p class="article-content">{{ object.description }}</p>
+            <p>Study Points: {{ object.study_points }}</p>
+            <p>Completed: {{ object.completed }}</p>
+        </div>
+    </article>
+{% endblock content %}

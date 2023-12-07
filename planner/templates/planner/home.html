@@ -3,10 +3,8 @@
     {% for document in documents %}
     <article class="media content-section">
         <div class="media-body">
-            <h2><a class="article-title" href="#">{{ document.title }}</a></h2>
+            <h2><a class="article-title" href="{% url 'document-detail' document.id %}">{{ document.title }}</a></h2>
             <p class="article-metadata">by {{ document.instructor }}</p>
-            <p class="article-content">{{ document.description }}</p>
-            <p>Study Points: {{ document.study_points }}</p>
             <p>Completed: {{ document.completed }}</p>
         </div>
     </article>
