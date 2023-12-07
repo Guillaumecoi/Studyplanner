@@ -35,41 +35,16 @@ body {
     border-radius: 3px;
     margin-bottom: 20px;
   }
-  
-  .article-title {
-    color: #444444;
+
+  .table-header-link {
+    color: inherit;         /* This makes the link use the text color of the parent element */
+    text-decoration: none;  /* Removes the underline from links */
+    cursor: pointer;        /* Keeps the cursor as a pointer to indicate it's clickable */
   }
-  
-  a.article-title:hover {
-    color: #428bca;
-    text-decoration: none;
-  }
-  
-  .article-content {
-    white-space: pre-line;
-  }
-  
-  .article-img {
-    height: 65px;
-    width: 65px;
-    margin-right: 16px;
-  }
-  
-  .article-metadata {
-    padding-bottom: 1px;
-    margin-bottom: 4px;
-    border-bottom: 1px solid #e3e3e3
-  }
-  
-  .article-metadata a:hover {
-    color: #333;
-    text-decoration: none;
-  }
-  
-  .article-svg {
-    width: 25px;
-    height: 25px;
-    vertical-align: middle;
+
+  .table-header-link:hover,
+  .table-header-link:focus {
+      text-decoration: none;
   }
   
   .account-img {

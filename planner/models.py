@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -9,6 +10,7 @@ class Document(models.Model):
     description = models.TextField(null=True, blank=True)
     study_points = models.IntegerField(null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
     completed = models.BooleanField(default=False)
     date_completed = models.DateTimeField(null=True, blank=True)
     
@@ -35,6 +37,11 @@ class Chapter(models.Model):
         
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        self.document.date_modified = timezone.now()
+        self.document.save()
+        super().save(*args, **kwargs)
         
 class Task(models.Model):
     title = models.CharField(max_length=255)

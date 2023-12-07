@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import DocumentListView, DocumentDetailView, DocumentCreateView, DocumentUpdateView, DocumentDeleteView
-from . import views
+from .views.document_views import *
+from planner.views import views
 
 
 documenturlpatterns = [

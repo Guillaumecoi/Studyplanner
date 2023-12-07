@@ -1,31 +1,29 @@
-import datetime
+from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Document, Chapter, Task, Deadline, Milestone
+from planner.models import Document
 
-
-def home(request):
-    if not request.user.is_authenticated:
-        # todo - make a welcome page
-        return redirect('login')
-    
-    context = {
-        'documents': Document.objects.filter(user=request.user)
-    }
-    return render(request, 'planner/home.html', context)
 
 class DocumentListView(ListView):
     model = Document
     template_name = 'planner/home.html'
     context_object_name = 'documents'
-    ordering = ['-date_added']
     paginate_by = 5
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.current_sort = '-date_modified'  # Default sort order
+
     def get_queryset(self):
+        self.current_sort = self.request.GET.get('sort', '-date_modified')
         queryset = super().get_queryset()
-        queryset = queryset.filter(user=self.request.user)
-        return queryset
+        return queryset.filter(user=self.request.user).order_by(self.current_sort)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_sort'] = self.current_sort
+        return context
     
 class DocumentDetailView(UserPassesTestMixin, DetailView):
     model = Document
@@ -51,7 +49,7 @@ class DocumentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         if form.instance.completed:
-            form.instance.date_completed = datetime.datetime.now()
+            form.instance.date_completed = timezone.now()
         return super().form_valid(form)
     
     def test_func(self):
@@ -62,11 +60,10 @@ class DocumentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
 class DocumentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Document
-    success_url = '/'
+    success_url = ''
     
     def test_func(self):
         document = self.get_object()
         if self.request.user == document.user:
             return True
         return False
-
