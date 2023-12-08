@@ -1,15 +1,15 @@
 {% extends "planner/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="content-section">
+    <div class="form">
         <form method="POST">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Document</legend>
+                <legend class="border-bottom mb-4 legend">Create a New Course</legend>
                 {{ form|crispy }}
             </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Create Document</button>
+            <div class="form-group right">
+                <button class="btn btn-secondary" type="submit">Add Course</button>
             </div>
         </form>
     </div>

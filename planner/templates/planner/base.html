@@ -9,6 +9,8 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+
 
     <link rel="stylesheet" type="text/css" href="{% static 'planner/main.css' %}">
 
@@ -52,23 +54,22 @@
         <div class="main-content">
           <!-- Navbar -->
           <nav class="navbar navbar-expand-md navbar-light">
-            <div class="container">
-              <!-- Navbar Right Side -->
-              <div class="navbar-nav ml-auto">
+            <!-- Navbar content -->
+            <div class="navbar-nav ml-auto">
                 <!-- Conditional rendering based on authentication -->
                 {% if user.is_authenticated %}
-                  <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
-                  <form class="nav-item" action="{% url 'logout' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="nav-link btn btn-link">Logout</button>
-                  </form>
+                    <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+                    <form class="nav-item" action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link btn btn-link">Logout</button>
+                    </form>
                 {% else %}
-                  <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                  <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                    <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                    <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
                 {% endif %}
-              </div>
             </div>
           </nav>
+        
 
           <!-- Main Content-->
           <main>

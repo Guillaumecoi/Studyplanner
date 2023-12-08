@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-class Document(models.Model):
+class Course(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     instructor = models.CharField(null=True, blank=True , max_length=100)
@@ -18,12 +18,12 @@ class Document(models.Model):
         return self.title
     
     def get_absolute_url(self):
-        return reverse('document-detail', kwargs={'pk': self.pk})
+        return reverse('course-detail', kwargs={'pk': self.pk})
     
     
 class Chapter(models.Model):
     title = models.CharField(max_length=255)
-    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     parent_chapter = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     order = models.IntegerField(default=0)
     content = models.TextField()
@@ -45,7 +45,7 @@ class Chapter(models.Model):
         
 class Task(models.Model):
     title = models.CharField(max_length=255)
-    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     description = models.TextField()
     order = models.IntegerField(default=0)
     time_spent = models.IntegerField(default=0)
@@ -60,7 +60,7 @@ class Task(models.Model):
     
 class Deadline(models.Model):
     title = models.CharField(max_length=255)
-    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     description = models.TextField()
     date = models.DateField()
     completed = models.BooleanField(default=False)
@@ -70,7 +70,7 @@ class Deadline(models.Model):
     
 class Milestone(models.Model):
     title = models.CharField(max_length=255)
-    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     chapters = models.ManyToManyField(Chapter)
     tasks = models.ManyToManyField(Task)
     description = models.TextField()

@@ -2,14 +2,14 @@ from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from planner.models import Document
+from planner.models import Course
 
 
-class DocumentListView(ListView):
-    model = Document
-    template_name = 'planner/home.html'
-    context_object_name = 'documents'
-    paginate_by = 5
+class CourseListView(ListView):
+    model = Course
+    template_name = 'planner/course_list.html'
+    context_object_name = 'courses'
+    paginate_by = 20
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -25,25 +25,25 @@ class DocumentListView(ListView):
         context['current_sort'] = self.current_sort
         return context
     
-class DocumentDetailView(UserPassesTestMixin, DetailView):
-    model = Document
+class CourseDetailView(UserPassesTestMixin, DetailView):
+    model = Course
     
     def test_func(self):
-        document = self.get_object()
-        if self.request.user == document.user:
+        course = self.get_object()
+        if self.request.user == course.user:
             return True
         return False
 
-class DocumentCreateView(LoginRequiredMixin, CreateView):
-    model = Document
+class CourseCreateView(LoginRequiredMixin, CreateView):
+    model = Course
     fields = ['title', 'instructor', 'description', 'study_points']
     
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
-class DocumentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Document
+class CourseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Course
     fields = ['title', 'instructor', 'description', 'study_points', 'completed']
     
     def form_valid(self, form):
@@ -53,17 +53,17 @@ class DocumentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return super().form_valid(form)
     
     def test_func(self):
-        document = self.get_object()
-        if self.request.user == document.user:
+        course = self.get_object()
+        if self.request.user == course.user:
             return True
         return False
     
-class DocumentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Document
+class CourseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Course
     success_url = ''
     
     def test_func(self):
-        document = self.get_object()
-        if self.request.user == document.user:
+        course = self.get_object()
+        if self.request.user == course.user:
             return True
         return False

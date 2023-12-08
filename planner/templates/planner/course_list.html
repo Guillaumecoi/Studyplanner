@@ -1,0 +1,56 @@
+{% extends "planner/base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <!-- Header Section -->
+    <div class="content-header">
+        <div class="header-left">
+            <h3>Course Tracker</h3>
+            <p>Select your course and track your progress</p>
+        </div>
+        <div class="header-right">
+            <a href="{% url 'course-create' %}" class="btn btn-secondary">Add Course</a>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="content-padding">
+        <div class="table-responsive content-section">
+            <table class="table">
+                <!-- Table Head -->
+                <thead>
+                    <tr>
+                        <th style="width: 70%;">
+                            <a href="?sort={% if current_sort == 'title' %}-title{% else %}title{% endif %}" class="table-header-link">Course</a>
+                            {% if current_sort == 'title' %}↓{% elif current_sort == '-title' %}↑{% endif %}
+                        </th>
+                        <th>
+                            <a href="?sort={% if current_sort == 'date_modified' %}-date_modified{% else %}date_modified{% endif %}" class="table-header-link">Date Modified</a>
+                            {% if current_sort == 'date_modified' %}↓{% elif current_sort == '-date_modified' %}↑{% endif %}
+                        </th>
+                    </tr>
+                </thead>
+                <!-- Table Body -->
+                <tbody>
+                    {% for course in courses %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'course-detail' course.id %}">{{ course.title }}</a>
+                            </td>
+                            <td>
+                                {% if course.date_modified %}
+                                    {% now "Y-m-d" as current_date %}
+                                    {% if course.date_modified|date:"Y-m-d" == current_date %}
+                                        {{ course.date_modified|timesince }} ago
+                                    {% else %}
+                                        {{ course.date_modified|date:"Y-m-d" }}
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}
