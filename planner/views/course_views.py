@@ -60,7 +60,7 @@ class CourseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
 class CourseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Course
-    success_url = ''
+    success_url = '/'
     
     def test_func(self):
         course = self.get_object()

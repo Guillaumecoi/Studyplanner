@@ -97,6 +97,12 @@ h1, h2, h3, h4, h5, h6 {
   text-align: right;
 }
 
+.hbox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 /* Form styling */
 .form {
   padding-left: 50px;

@@ -1,12 +1,17 @@
 {% extends "planner/base.html" %}
 {% block content %}
-    <article class="media content-section">
-        <div class="media-body">
-            <h2 class"article-title"> {{ object.title }} </h2>
-            <p class="article-metadata">by {{ object.instructor }}</p>
-            <p class="article-content">{{ object.description }}</p>
-            <p>Study Points: {{ object.study_points }}</p>
-            <p>Completed: {{ object.completed }}</p>
+    <!-- Header Section -->
+    <div class="content-header">
+        <div class="header-left">
+            <h3>{{ object.title }}</h3>
+            <p>Select your course and track your progress</p>
         </div>
-    </article>
+        <div class="header-right">
+            <div class="hbox">
+                <a href="{% url 'course-update' object.id %}" class="btn btn-secondary">Update Course</a>
+                <!-- Delete Button -->
+                <a href="{% url 'course-delete' object.id %}" class="btn btn-danger">Delete Course</a>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
