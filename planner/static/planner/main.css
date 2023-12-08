@@ -1,59 +1,90 @@
 body {
-    background: #fafafa;
-    color: #333333;
-    margin-top: 5rem;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    color: #444444;
-  }
-  
-  ul {
-    margin: 0;
-  }
-  
-  .bg-steel {
-    background-color: #5f788a;
-  }
-  
-  .site-header .navbar-nav .nav-link {
-    color: #cbd5db;
-  }
-  
-  .site-header .navbar-nav .nav-link:hover {
-    color: #ffffff;
-  }
-  
-  .site-header .navbar-nav .nav-link.active {
-    font-weight: 500;
-  }
-  
-  .content-section {
-    background: #ffffff;
-    padding: 10px 20px;
-    border: 1px solid #dddddd;
-    border-radius: 3px;
-    margin-bottom: 20px;
-  }
+  background: #fffefe; /* Almost white background */
+  color: #333; /* Standard dark text for readability */
+  margin-top: 5rem;
+}
 
-  .table-header-link {
-    color: inherit;         /* This makes the link use the text color of the parent element */
-    text-decoration: none;  /* Removes the underline from links */
-    cursor: pointer;        /* Keeps the cursor as a pointer to indicate it's clickable */
-  }
+h1, h2, h3, h4, h5, h6 {
+  color: #4a4a4a; /* Soft dark grey for headings */
+}
 
-  .table-header-link:hover,
-  .table-header-link:focus {
-      text-decoration: none;
-  }
-  
-  .account-img {
-    height: 125px;
-    width: 125px;
-    margin-right: 20px;
-    margin-bottom: 16px;
-  }
-  
-  .account-heading {
-    font-size: 2.5rem;
-  }
+.navbar {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  box-shadow: 0 4px 2px -2px rgba(0,0,0,.05);
+  font-size: 1.1rem;
+  color: #333; /* Dark text on light background */
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #4a4a4a; /* Harmonizing with the heading color */
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #707070; /* Dark grey for hover */
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.sidebar {
+  background-color: #f0f0f0; /* Lighter grey for sidebar */
+  color: #333; /* Keeping the text dark for contrast */
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px; /* Narrower sidebar */
+  overflow-y: auto;
+  z-index: 1020;
+}
+
+.sidebar .nav-link {
+  color: #333;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #d4d4d4; /* Medium grey for hover background */
+  color: #4a4a4a; /* Slightly darker grey for text on hover */
+}
+
+.main-content {
+  margin-left: 200px; /* Adjusted for the sidebar width */
+  width: calc(100% - 200px); /* Full width minus the sidebar width */
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.content-section {
+  background-color: #fafafa; /* Slightly darker than main content */
+  margin: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  margin-bottom: 20px;
+}
+
+.table-header-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.table-header-link:hover,
+.table-header-link:focus {
+  text-decoration: underline; /* Underline for interaction feedback */
+  color: #4a4a4a; /* Dark grey for focus */
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+  color: #4a4a4a; /* Soft dark grey for emphasis */
+}
