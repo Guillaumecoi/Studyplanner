@@ -1,0 +1,55 @@
+
+<div class="content-section">
+    <!-- Header Section -->
+    <div class="content-header">
+        <div class="header-left">
+            <h3>Chapters</h3>
+        </div>
+        <div>
+            <a href="{% url 'chapter-create' object.id 0 %}" class="btn btn-secondary">Add Chapter</a>
+        </div>
+    </div>
+
+    {% if chapters %}
+        <!-- Table Section for Chapters -->
+        <div class="content-padding">
+            <div class="table-responsive content-section">
+                <table class="table" id="chaptersTable">
+                    <!-- Table Head -->
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">Order</th>
+                            <th style="width: 55%;">Title</th>
+                            <th style="width: 30%;">Progress (%)</th>
+                        </tr>
+                    </thead>
+                    <!-- Table Body -->
+                    <tbody>
+                        {% for chapter in chapters %}
+                            <tr class="selectable-row" data-href="#">
+                                <td>{{ chapter.order }}</td>
+                                <td>{{ chapter.title }}</td>
+                                <td>
+                                    <!-- Progress in percent; you can add logic here to display it -->
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <p>No chapters available.</p>
+    {% endif %}
+<script>
+    // JavaScript to make table rows clickable
+    document.addEventListener('DOMContentLoaded', function() {
+        var rows = document.querySelectorAll('#chaptersTable .selectable-row');
+        rows.forEach(function(row) {
+            row.addEventListener('click', function() {
+                window.location.href = this.dataset.href;
+            });
+        });
+    });
+</script>
+</div>

@@ -34,13 +34,14 @@ class Chapter(models.Model):
     
     class Meta:
         ordering = ['order',]
+        unique_together = ('course', 'parent_chapter', 'order')
         
     def __str__(self):
         return self.title
     
     def save(self, *args, **kwargs):
-        self.document.date_modified = timezone.now()
-        self.document.save()
+        self.course.date_modified = timezone.now()
+        self.course.save()
         super().save(*args, **kwargs)
         
 class Task(models.Model):

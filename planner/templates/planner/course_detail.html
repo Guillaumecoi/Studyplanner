@@ -4,8 +4,18 @@
     <div class="content-header">
         <div class="header-left">
             <h3>{{ object.title }}</h3>
-            <p>Select your course and track your progress</p>
+            <p>{% if object.instructor %}
+                {{ object.instructor }},
+            {% endif %}
+            {% if object.study_points %}
+                {{ object.study_points }} Study points
+            {% endif %}
+            </p>
+            {% if object.description %}
+                <p>{{ object.description }}</p>
+            {% endif %}
         </div>
+        
         <div class="header-right">
             <div class="hbox">
                 <a href="{% url 'course-update' object.id %}" class="btn btn-secondary">Update Course</a>
@@ -13,5 +23,11 @@
                 <a href="{% url 'course-delete' object.id %}" class="btn btn-danger">Delete Course</a>
             </div>
         </div>
+    </div>
+
+    <!-- Chapter List Section -->
+    <div class="content-padding">
+        <!-- Include the chapters list template -->
+        {% include "planner/chapter_list.html" %}
     </div>
 {% endblock content %}

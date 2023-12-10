@@ -2,8 +2,7 @@ from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from planner.models import Course
-
+from planner.models import Course, Chapter
 
 class CourseListView(ListView):
     model = Course
@@ -33,6 +32,13 @@ class CourseDetailView(UserPassesTestMixin, DetailView):
         if self.request.user == course.user:
             return True
         return False
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        course = self.get_object()
+        chapters = Chapter.objects.filter(course=course).order_by('order')
+        context['chapters'] = chapters
+        return context
 
 class CourseCreateView(LoginRequiredMixin, CreateView):
     model = Course
