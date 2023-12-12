@@ -3,7 +3,7 @@
     <!-- Header Section -->
     <div class="content-header">
         <div class="header-left">
-            <h3>{{ object.title }}</h3>
+            <h2>{{ object.title }}</h2>
             <p>{% if object.instructor %}
                 {{ object.instructor }},
             {% endif %}
@@ -25,9 +25,13 @@
         </div>
     </div>
 
-    <!-- Chapter List Section -->
-    <div class="content-padding">
-        <!-- Include the chapters list template -->
-        {% include "planner/chapter_list.html" %}
+    <div class="content-body">
+        <div class="row content-padding">
+            <!-- Chapter List Column -->
+            <div class="col-md-12">
+                {% include "planner/chapter/chapter_list.html" %}
+            </div>
+        </div>
     </div>
+    
 {% endblock content %}

@@ -1,0 +1,73 @@
+<div class="content-body">
+    <div class="row content-padding">
+        <div class="col-md-6 pr-5">
+            <div class="content-section pt-3">
+                <!-- Header Section -->
+                <div class="content-header">
+                    <div class="header-left">
+                        <h3>Chapters</h3>
+                    </div>
+                </div>
+
+                {% if chapters %}
+                    <!-- Table Section for Chapters -->
+                    <div class="content-padding">
+                        <div class="table-responsive content-section">
+                            <table class="table" id="chaptersTable">
+                                <!-- Table Head -->
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%;">Order</th>
+                                        <th style="width: 55%;">Title</th>
+                                        <th style="width: 30%;">Progress (%)</th>
+                                    </tr>
+                                </thead>
+                                <!-- Table Body -->
+                                <tbody>
+                                    {% for chapter in chapters %}
+                                        <tr class="selectable-row" data-href="#">
+                                            <td>{{ chapter.order }}</td>
+                                            <td>{{ chapter.title }}</td>
+                                            <td>
+                                                <!-- Progress in percent; you can add logic here to display it -->
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>No chapters available.</p>
+                {% endif %}
+                
+                
+                
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var rows = document.querySelectorAll('#chaptersTable .selectable-row');
+                        rows.forEach(function(row) {
+                            row.addEventListener('click', function() {
+                                // Remove selected class from all rows
+                                rows.forEach(function(r) {
+                                    r.classList.remove('selected-row');
+                                });
+                                // Add selected class to clicked row
+                                this.classList.add('selected-row');
+                
+                                // Optional: Change content above the table based on the selected row
+                                // For example, update a header with the chapter title
+                                document.querySelector('.content-header .header-left h3').textContent = 'Selected Chapter: ' + this.cells[1].textContent;
+                            });
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+
+        <div class="col-md-6 content-section">
+            {% include "planner/chapter/chapter_addform.html" %}
+        </div>
+    </div>
+</div>
+

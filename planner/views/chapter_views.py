@@ -1,3 +1,4 @@
+from django import forms
 from django.utils import timezone
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -46,3 +47,8 @@ class ChapterCreateView(LoginRequiredMixin, UserCoursePermissionMixin, CreateVie
             form.instance.parent_chapter = None
 
         return super().form_valid(form)
+
+class ChapterForm(forms.ModelForm):
+    class Meta:
+        model = Chapter
+        fields = ['title', 'pages', 'time_estimated', 'slides']

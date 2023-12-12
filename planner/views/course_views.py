@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from planner.models import Course, Chapter
+from .chapter_views import ChapterForm
 
 class CourseListView(ListView):
     model = Course
@@ -36,10 +37,32 @@ class CourseDetailView(UserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         course = self.get_object()
+        
+        # Get chapters related to the course
         chapters = Chapter.objects.filter(course=course).order_by('order')
         context['chapters'] = chapters
-        return context
 
+        # Add the chapter creation form to the context
+        context['form'] = ChapterForm(initial={'course': course})
+        
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = ChapterForm(request.POST)
+        
+        if form.is_valid():
+            chapter = form.save(commit=False)
+            chapter.course = self.object
+            chapter.save()
+            return redirect('course-detail', pk=self.object.pk)
+        else:
+            # Handle the case where the form is not valid
+            return self.render_to_response(self.get_context_data(form=form))
+        
+
+
+        
 class CourseCreateView(LoginRequiredMixin, CreateView):
     model = Course
     fields = ['title', 'instructor', 'description', 'study_points']

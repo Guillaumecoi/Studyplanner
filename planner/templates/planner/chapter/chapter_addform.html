@@ -1,0 +1,13 @@
+{% load crispy_forms_tags %}
+<div class="content-padding">
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset>
+            <legend class="legend">Create a New Chapter</legend>
+            {{ form|crispy }}
+        </fieldset>
+        <div class="right">
+            <button class="btn btn-secondary" type="submit">Add Chapter</button>
+        </div>
+    </form>
+</div>
