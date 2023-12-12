@@ -10,7 +10,7 @@ from planner.models import Course, Chapter
 
 class UserCoursePermissionMixin:
     def dispatch(self, request, *args, **kwargs):
-        parent_course_id = kwargs.get('parent_course')
+        parent_course_id = kwargs.get('parent_course_id')
         course = get_object_or_404(Course, id=parent_course_id)
         if not request.user == course.user:
             # Return a 403 Forbidden response
@@ -19,36 +19,29 @@ class UserCoursePermissionMixin:
 
 class ChapterCreateView(LoginRequiredMixin, UserCoursePermissionMixin, CreateView):
     model = Chapter
-    fields = ['title', 'pages', 'guessed_time']
-    
-    def get_success_url(self):
-        # Redirect to the detail view of the course associated with this chapter
-        return reverse('course-detail', kwargs={'pk': self.object.course.pk})
-
+    template_name = 'planner/chapter/chapter_addform.html'
+    fields = ['title', 'time_estimated', 'pages', 'slides']
     
     def form_valid(self, form):
-        # Retrieve the course and parent chapter using the ID from URL parameters
-        parent_course_id = self.kwargs.get('parent_course')
-        parent_chapter_id = self.kwargs.get('parent_chapter')
-
-        # Fetch the course and check if it belongs to the user
+        parent_course_id = self.kwargs.get('parent_course_id')
         course = get_object_or_404(Course, id=parent_course_id)
         if course.user != self.request.user:
             messages.error(self.request, "You do not have permission for this course.")
             return HttpResponseRedirect(reverse_lazy('your-error-view-name'))  # Adjust the redirection as needed
 
         form.instance.course = course
-
-        # Check if parent chapter is valid and belongs to the same course
-        if parent_chapter_id != 0:
-            parent_chapter = get_object_or_404(Chapter, id=parent_chapter_id, course=course)
-            form.instance.parent_chapter = parent_chapter
-        else:
-            form.instance.parent_chapter = None
-
         return super().form_valid(form)
-
-class ChapterForm(forms.ModelForm):
-    class Meta:
-        model = Chapter
-        fields = ['title', 'pages', 'time_estimated', 'slides']
+    
+class ChapterUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Chapter
+    template_name = 'planner/chapter/chapter_updateform.html'
+    fields = ['title', 'time_estimated', 'pages', 'slides']
+    
+    def form_valid(self, form):
+        return super().form_valid(form)
+    
+    def test_func(self):
+        chapter = self.get_object()
+        if self.request.user == chapter.course.user:
+            return True
+        return False

@@ -57,6 +57,8 @@ class Chapter(models.Model):
         Chapter.objects.filter(course=self.course, parent_chapter=self.parent_chapter, order__gt=self.order).update(order=models.F('order') - 1)
         super().delete(*args, **kwargs)
         
+    def get_absolute_url(self):
+        return reverse('course-detail', kwargs={'pk': self.course.pk})
         
 class Task(models.Model):
     title = models.CharField(max_length=255)

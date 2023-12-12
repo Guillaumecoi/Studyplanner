@@ -3,7 +3,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from planner.models import Course, Chapter
-from .chapter_views import ChapterForm
 
 class CourseListView(ListView):
     model = Course
@@ -24,44 +23,6 @@ class CourseListView(ListView):
         context = super().get_context_data(**kwargs)
         context['current_sort'] = self.current_sort
         return context
-    
-class CourseDetailView(UserPassesTestMixin, DetailView):
-    model = Course
-    
-    def test_func(self):
-        course = self.get_object()
-        if self.request.user == course.user:
-            return True
-        return False
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        course = self.get_object()
-        
-        # Get chapters related to the course
-        chapters = Chapter.objects.filter(course=course).order_by('order')
-        context['chapters'] = chapters
-
-        # Add the chapter creation form to the context
-        context['form'] = ChapterForm(initial={'course': course})
-        
-        return context
-    
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form = ChapterForm(request.POST)
-        
-        if form.is_valid():
-            chapter = form.save(commit=False)
-            chapter.course = self.object
-            chapter.save()
-            return redirect('course-detail', pk=self.object.pk)
-        else:
-            # Handle the case where the form is not valid
-            return self.render_to_response(self.get_context_data(form=form))
-        
-
-
         
 class CourseCreateView(LoginRequiredMixin, CreateView):
     model = Course
@@ -76,7 +37,6 @@ class CourseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     fields = ['title', 'instructor', 'description', 'study_points', 'completed']
     
     def form_valid(self, form):
-        form.instance.user = self.request.user
         if form.instance.completed:
             form.instance.date_completed = timezone.now()
         return super().form_valid(form)
@@ -96,3 +56,23 @@ class CourseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == course.user:
             return True
         return False
+    
+    
+class CourseDetailView(UserPassesTestMixin, DetailView):
+    model = Course
+    
+    def test_func(self):
+        course = self.get_object()
+        if self.request.user == course.user:
+            return True
+        return False
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        course = self.get_object()
+        
+        # Get chapters related to the course
+        chapters = Chapter.objects.filter(course=course).order_by('order')
+        context['chapters'] = chapters
+        
+        return context

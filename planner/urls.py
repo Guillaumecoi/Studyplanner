@@ -12,7 +12,8 @@ course_urlpatterns = [
 ]
 
 chapter_urlpatterns = [
-    path('chapter/new/<int:parent_course>/<int:parent_chapter>/', ChapterCreateView.as_view(), name='chapter-create'),
+    path('course/<int:parent_course_id>/chapter/new/', ChapterCreateView.as_view(), name='chapter-create'),
+    path('course/<int:parent_course_id>/chapter/<int:pk>/update/', ChapterUpdateView.as_view(), name='chapter-update'),
 ]
     
 
