@@ -19,6 +19,10 @@ class Course(models.Model):
     def __str__(self):
         return self.title
     
+    def save(self, *args, **kwargs):
+        if self.completed and not self.date_completed:
+            self.date_completed = timezone.now()
+    
     def get_absolute_url(self):
         return reverse('course-detail', kwargs={'pk': self.pk})
     
@@ -37,6 +41,7 @@ class Chapter(models.Model):
     slides_completed = models.IntegerField(default=0)
     progress = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     completed = models.BooleanField(default=False)
+    date_completed = models.DateTimeField(null=True, blank=True)
     
     class Meta:
         ordering = ['order',]
@@ -46,10 +51,14 @@ class Chapter(models.Model):
         return self.title
     
     def save(self, *args, **kwargs):
+        # auto increment order
         if not self.pk:
             max_order = Chapter.objects.filter(course=self.course, parent_chapter=self.parent_chapter).aggregate(models.Max('order'))['order__max']
             if max_order is not None:
                 self.order = max_order + 1
+        
+        if self.completed and not self.date_completed:
+            self.date_completed = timezone.now()
         self.course.date_modified = timezone.now()
         self.course.save()
         super().save(*args, **kwargs)
@@ -61,6 +70,26 @@ class Chapter(models.Model):
         
     def get_absolute_url(self):
         return reverse('course-detail', kwargs={'pk': self.course.pk})
+    
+class StudySession(models.Model):
+    chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
+    date = models.DateField()
+    time_spent = models.DurationField(default=timedelta(0))
+    pages_done = models.IntegerField(default=0)
+    slides_done = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return f"{self.chapter.title} - {self.date}"
+    
+    def save(self, *args, **kwargs):
+        self.chapter.time_spent += self.time_spent
+        self.chapter.save()
+        super().save(*args, **kwargs)
+        
+    def delete(self, *args, **kwargs):
+        self.chapter.time_spent -= self.time_spent
+        self.chapter.save()
+        super().delete(*args, **kwargs)
         
 class Task(models.Model):
     title = models.CharField(max_length=255)
