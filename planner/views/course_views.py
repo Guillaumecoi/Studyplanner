@@ -3,16 +3,17 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from planner.models import Course, Chapter
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-class CourseListView(ListView):
+class CourseListView(LoginRequiredMixin, ListView):
     model = Course
-    template_name = 'planner/course_list.html'
+    template_name = 'planner/course/course_list.html'
     context_object_name = 'courses'
     paginate_by = 20
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.current_sort = '-date_modified'  # Default sort order
+        self.current_sort = '-date_modified' 
 
     def get_queryset(self):
         self.current_sort = self.request.GET.get('sort', '-date_modified')
@@ -26,6 +27,7 @@ class CourseListView(ListView):
         
 class CourseCreateView(LoginRequiredMixin, CreateView):
     model = Course
+    template_name = 'planner/course/course_form.html'
     fields = ['title', 'instructor', 'description', 'study_points']
     
     def form_valid(self, form):
@@ -34,6 +36,7 @@ class CourseCreateView(LoginRequiredMixin, CreateView):
 
 class CourseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Course
+    template_name = 'planner/course/course_form.html'
     fields = ['title', 'instructor', 'description', 'study_points', 'completed']
     
     def form_valid(self, form):
@@ -49,6 +52,7 @@ class CourseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
 class CourseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Course
+    template_name = 'planner/course/course_confirm_delete.html'
     success_url = '/'
     
     def test_func(self):
@@ -60,6 +64,7 @@ class CourseDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     
 class CourseDetailView(UserPassesTestMixin, DetailView):
     model = Course
+    template_name = 'planner/course/course_detail.html'
     
     def test_func(self):
         course = self.get_object()
