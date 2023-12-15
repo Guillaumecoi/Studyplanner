@@ -3,7 +3,7 @@
         <div class="col-md-6 pr-5">
             <div class="content-section pt-3">
                 <!-- Information -->
-                <div data-base-update-url="{% url 'chapter-update' course.id 0%}" id="chapterUpdateUrlBase"></div>
+                <div data-base-detail-url="{% url 'chapter-detail' course.id 0 %}" id="chapterDetailUrlBase"></div>
 
 
                 <!-- Header Section -->
@@ -12,10 +12,10 @@
                         <h3>Chapters</h3>
                     </div>
                     <div class="header-right">
-                        <button id="createChapterButton" class="btn btn-primary" 
+                        <button id="createChapterButton" class="btn btn-sm btn-primary"
                             data-course-id="{{ course.id }}"
                             data-base-url="{% url 'chapter-create' course.id %}">
-                            Create New Chapter
+                            +
                         </button>
                     </div>
                 </div>
@@ -28,19 +28,22 @@
                                 <!-- Table Head -->
                                 <thead>
                                     <tr>
-                                        <th style="width: 15%;">Order</th>
-                                        <th style="width: 55%;">Title</th>
-                                        <th style="width: 30%;">Progress (%)</th>
+                                        <th style="width: 15%;">Nr</th>
+                                        <th style="width: 45%;">Title</th>
+                                        <th style="width: 25%;">Progress</th>
+                                        <th style="width: 15%;">Actions</th>
                                     </tr>
                                 </thead>
                                 <!-- Table Body -->
                                 <tbody>
                                     {% for chapter in chapters %}
                                         <tr class="selectable-row" data-chapter-key="{{ chapter.id }}">
-                                            <td>{{ chapter.id }}</td>
+                                            <td>{{ chapter.order }}</td>
                                             <td>{{ chapter.title }}</td>
+                                            <td>{{ chapter.progress }}%</td>
                                             <td>
-                                                <!-- Progress logic -->
+                                                <a href="{% url 'chapter-update' course.id chapter.id %}" class="btn btn-sm btn-primary">🖉</a>
+                                                <a href="{% url 'chapter-delete' course.id chapter.id %}" class="btn btn-sm btn-danger">🗑</a>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -49,7 +52,9 @@
                         </div>
                     </div>
                 {% else %}
-                    <p>No chapters available.</p>
+                    <div class="content-padding">
+                        <p>No chapters available.</p>
+                    </div>
                 {% endif %}
                 
                 
@@ -71,10 +76,10 @@
                         var createChapterButton = document.getElementById('createChapterButton');
                         var courseId = createChapterButton.getAttribute('data-course-id');
                         var rows = document.querySelectorAll('#chaptersTable .selectable-row');
-                        var baseUrl = document.getElementById('chapterUpdateUrlBase').getAttribute('data-base-update-url');
-                    
+                        var baseUrl = document.getElementById('chapterDetailUrlBase').getAttribute('data-base-detail-url');
+
                         loadChapterForm(courseId);
-                    
+
                         createChapterButton.addEventListener('click', function() {
                             loadChapterForm(courseId);
                             rows.forEach(function(r) { r.classList.remove('selected-row'); });
@@ -85,11 +90,11 @@
                                 // Add selected class to clicked row and remove from others
                                 rows.forEach(function(r) { r.classList.remove('selected-row'); });
                                 this.classList.add('selected-row');
-                    
-                                // Fetch the edit form for the selected chapter
+
+                                // Fetch the detail view for the selected chapter
                                 var chapterId = this.getAttribute('data-chapter-key');
-                                var updateUrl = baseUrl.replace('0', `${chapterId}`);
-                                fetch(updateUrl)
+                                var detailUrl = baseUrl.replace('0', `${chapterId}`);
+                                fetch(detailUrl)
                                     .then(response => response.text())
                                     .then(html => {
                                         document.getElementById('formColumn').innerHTML = html;

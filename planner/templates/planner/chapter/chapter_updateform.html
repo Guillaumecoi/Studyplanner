@@ -1,6 +1,8 @@
+{% extends "planner/base.html" %}
+{% block content %}
 {% load crispy_forms_tags %}
 <div class="content-padding">
-    <form method="POST" action="{% url 'chapter-update' chapter.course.id chapter.id %}">
+    <form method="POST" action="{% url 'chapter-update' chapter.course.id chapter.id %}" class="content-section">
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4 legend">Update Course</legend>
@@ -11,3 +13,4 @@
         </div>
     </form>
 </div>
+{% endblock content %}

@@ -1,7 +1,5 @@
-from django import forms
-from django.utils import timezone
 from django.urls import reverse_lazy, reverse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -17,6 +15,18 @@ class UserCoursePermissionMixin:
             return HttpResponseForbidden("You do not have permission to access this page.")
         return super().dispatch(request, *args, **kwargs)
 
+
+    
+class ChapterDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Chapter
+    template_name = 'planner/chapter/chapter_detail.html'
+    
+    def test_func(self):
+        chapter = self.get_object()
+        if self.request.user == chapter.course.user:
+            return True
+        return False
+
 class ChapterCreateView(LoginRequiredMixin, UserCoursePermissionMixin, CreateView):
     model = Chapter
     template_name = 'planner/chapter/chapter_addform.html'
@@ -27,7 +37,7 @@ class ChapterCreateView(LoginRequiredMixin, UserCoursePermissionMixin, CreateVie
         course = get_object_or_404(Course, id=parent_course_id)
         if course.user != self.request.user:
             messages.error(self.request, "You do not have permission for this course.")
-            return HttpResponseRedirect(reverse_lazy('your-error-view-name'))  # Adjust the redirection as needed
+            return HttpResponseRedirect(reverse_lazy('your-error-view-name'))
 
         form.instance.course = course
         return super().form_valid(form)
@@ -45,3 +55,17 @@ class ChapterUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if self.request.user == chapter.course.user:
             return True
         return False
+    
+class ChapterDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Chapter
+    template_name = 'planner/chapter/chapter_confirm_delete.html'
+    
+    def test_func(self):
+        chapter = self.get_object()
+        if self.request.user == chapter.course.user:
+            return True
+        return False
+    
+    def get_success_url(self) -> str:
+        chapter = self.get_object()
+        return reverse('course-detail', args=[str(chapter.course.id)])

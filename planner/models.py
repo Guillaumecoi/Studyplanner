@@ -2,6 +2,7 @@ from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.core.validators import MinValueValidator, MaxValueValidator
 from datetime import timedelta
 
 class Course(models.Model):
@@ -26,7 +27,7 @@ class Chapter(models.Model):
     title = models.CharField(max_length=255)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     parent_chapter = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
-    order = models.IntegerField(default=0)
+    order = models.IntegerField(default=1)
     content = models.TextField()
     pages = models.IntegerField(null=True, blank=True)
     pages_completed = models.IntegerField(default=0)
@@ -34,6 +35,7 @@ class Chapter(models.Model):
     time_spent = models.DurationField(default=timedelta(0))
     slides = models.IntegerField(null=True, blank=True)
     slides_completed = models.IntegerField(default=0)
+    progress = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     completed = models.BooleanField(default=False)
     
     class Meta:

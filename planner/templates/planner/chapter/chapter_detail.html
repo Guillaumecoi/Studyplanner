@@ -1,0 +1,33 @@
+{% load percentage_filter %}
+<div class="content-header pt-3">
+    <div class="header-left">
+        <h3>Chapter {{object.order}}: {{ object.title }}</h3>
+    </div>
+</div>
+<div class="container mt-5">
+    <h4>Progress:</h4>
+    {% if object.pages > 0 %}
+        <div class="mb-3">
+            <div>Pages: {{ object.pages_completed }} / {{ object.pages }}</div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: {{ object.pages_completed|percentage:object.pages }}%;" aria-valuenow="{{ object.pages_completed }}" aria-valuemin="0" aria-valuemax="{{ object.pages }}"></div>
+            </div>
+        </div>
+    {% endif %}
+    {% if object.slides > 0 %}
+        <div class="mb-3">
+            <div>Slides: {{ object.slides_completed }} / {{ object.slides }}</div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: {{ object.slides_completed|percentage:object.slides }}%;" aria-valuenow="{{ object.slides_completed }}" aria-valuemin="0" aria-valuemax="{{ object.slides }}"></div>
+            </div>
+        </div>
+    {% endif %}
+    {% if object.time_estimated%}
+        <div class="mb-3">
+            <div>Time: {{ object.time_spent }} / {{ object.time_estimated }}</div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: {{ object.time_spent|percentage:object.time_estimated }}%;" aria-valuenow="{{ object.time_spent }}" aria-valuemin="0" aria-valuemax="{{ object.time_estimated }}"></div>
+            </div>
+        </div>
+    {% endif %}
+</div>
