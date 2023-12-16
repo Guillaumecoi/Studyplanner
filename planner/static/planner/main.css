@@ -1,24 +1,11 @@
 body {
   background: #fffefe; /* Almost white background */
   color: #333; /* Standard dark text for readability */
-  margin-top: 5rem;
   font-family: 'Aleo', serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
   color: #4a4a4a; /* Soft dark grey for headings */
-}
-
-.navbar {
-  position: fixed;
-  top: 0;
-  width: calc(100% - 240px); /* Full width minus the sidebar width */
-  padding-left: 20px;
-  padding-right: 20px;
-  box-shadow: 0 4px 2px -2px rgba(0,0,0,.05);
-  font-size: 1.1rem;
-  color: #333; /* Dark text on light background */
-  background: #fffefe;
 }
 
 .site-header .navbar-nav .nav-link {
@@ -33,32 +20,31 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 
-.sidebar {
-  background-color: #f0f0f0; /* Lighter grey for sidebar */
-  color: #333; /* Keeping the text dark for contrast */
-  min-height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 200px; /* Narrower sidebar */
-  overflow-y: auto;
-  z-index: 1020;
+/* CSS for sidebar */
+#sidebarMenu .nav-item svg {
+  width: 1.5em;
+  height: 1.5em;
+  margin-right: 0.5em;
 }
 
-.sidebar .nav-link {
+#sidebarMenu .nav-item {
+  font-size: 1.3em;
+  padding-left: 1em; 
+}
+
+#sidebarMenu .nav-link {
   color: #333;
 }
 
-.sidebar .nav-link:hover {
+#sidebarMenu .nav-link:hover {
   background-color: #d4d4d4; /* Medium grey for hover background */
   color: #4a4a4a; /* Slightly darker grey for text on hover */
 }
 
-.main-content {
-  margin-left: 200px; /* Adjusted for the sidebar width */
-  width: calc(100% - 200px); /* Full width minus the sidebar width */
-  padding-left: 20px;
-  padding-right: 20px;
+/* CSS for Navbar */
+.navbar-nav {
+  justify-content: flex-end;
+  width: 100%;
 }
 
 
@@ -151,4 +137,17 @@ h1, h2, h3, h4, h5, h6 {
 .account-heading {
   font-size: 2.5rem;
   color: #4a4a4a; /* Soft dark grey for emphasis */
+}
+
+/* Timer styling */
+.btn-container {
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+}
+.hide {
+  display: none;
+}
+.show {
+  display: block;
 }

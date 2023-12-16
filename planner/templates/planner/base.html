@@ -1,8 +1,10 @@
 {% load static %}
 {% load django_bootstrap5 %}
+{% load bootstrap_icons %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,10 +26,12 @@
       <div class="row">
         <!-- Sidebar -->
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light collapse" style="position: fixed; height: 100%; overflow: auto; z-index: 1030;">
-          <div class="position-sticky pt-3">
+          <div class="position-sticky pt-5">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'planner-home' %}">Home</a>
+                <a class="nav-link active d-flex align-items-center" aria-current="page" href="{% url 'planner-home' %}">
+                  {% bs_icon "house-fill" %} Home
+                </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="admin/">Admin</a>
@@ -45,10 +49,10 @@
             <div class="navbar-nav ml-auto">
                 <!-- Conditional rendering based on authentication -->
                 {% if user.is_authenticated %}
-                    <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+                    <a class="nav-link btn btn-link" href="{% url 'profile' %}"> {% bs_icon "person-circle" %} Profile</a>
                     <form class="nav-item" action="{% url 'logout' %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="nav-link btn btn-link">Logout</button>
+                        <button type="submit" class="nav-link btn btn-link">{% bs_icon "box-arrow-left" %} Logout</button>
                     </form>
                 {% else %}
                     <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
