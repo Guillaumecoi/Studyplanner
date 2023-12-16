@@ -4,7 +4,7 @@
 {% load bootstrap_icons %}
 {% block content %}
 <!-- Header Section -->
-<div class="d-flex justify-content-between align-items-end px-5 undershadow">
+<div class="d-flex justify-content-between align-items-end px-5 pt-2 undershadow">
     <div class="d-flex flex-column">
         <h3>Course Tracker</h3>
         <p>Select your course and track your progress</p>
@@ -15,24 +15,24 @@
 </div>
 
 <!-- Table Section for Courses -->
-<div class="content-padding">
+<div class="p-3">
     <div class="table-responsive content-section">
         <table class="table" id="coursesTable">
             <!-- Table Head -->
             <thead>
                 <tr>
-                    <th style="width: 70%;">
+                    <th class="table-header" style="width: 70%;">
                         <a href="?sort={% if current_sort == 'title' %}-title{% else %}title{% endif %}" class="table-header-link">Course</a>
-                        {% if current_sort == 'title' %}↓{% elif current_sort == '-title' %}↑{% endif %}
+                        {% if current_sort == 'title' %} {% bs_icon "caret-down-fill" %} {% elif current_sort == '-title' %} {% bs_icon "caret-up-fill" %} {% endif %}
                     </th>
-                    <th>
+                    <th class="table-header">
                         <a href="?sort={% if current_sort == 'date_modified' %}-date_modified{% else %}date_modified{% endif %}" class="table-header-link">Date Modified</a>
-                        {% if current_sort == 'date_modified' %}↓{% elif current_sort == '-date_modified' %}↑{% endif %}
+                        {% if current_sort == 'date_modified' %} {% bs_icon "caret-down-fill" %} {% elif current_sort == '-date_modified' %} {% bs_icon "caret-up-fill" %} {% endif %}
                     </th>
                 </tr>
             </thead>
             <!-- Table Body -->
-            <tbody>
+            <tbody class="table-body">
                 {% for course in courses %}
                     <tr class="selectable-row" data-href="{% url 'course-detail' course.id %}">
                         <td>{{ course.title }}</td>

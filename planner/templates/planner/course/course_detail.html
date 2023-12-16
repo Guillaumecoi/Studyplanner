@@ -1,35 +1,33 @@
 {% extends "planner/base.html" %}
 {% block content %}
     <!-- Header Section -->
-    <div class="content-header">
-        <div class="header-left">
+    <div class="d-flex justify-content-between align-items-end px-5 undershadow">
+        <div class="d-flex flex-column">
             <h2>{{ object.title }}</h2>
-            <p>{% if object.instructor %}
-                {{ object.instructor }},
-            {% endif %}
-            {% if object.study_points %}
-                {{ object.study_points }} Study points
-            {% endif %}
+            <p>
+                {% if object.instructor %}
+                    {{ object.instructor }}
+                    {% if object.study_points %}, {% endif %}
+                {% endif %}
+                {% if object.study_points %}
+                    {{ object.study_points }} Study points
+                {% endif %}
             </p>
-            {% if object.description %}
-                <p>{{ object.description }}</p>
-            {% endif %}
         </div>
-        
-        <div class="header-right">
-            <div class="hbox">
-                <a href="{% url 'course-update' object.id %}" class="btn btn-secondary">Update Course</a>
-                <!-- Delete Button -->
-                <a href="{% url 'course-delete' object.id %}" class="btn btn-danger">Delete Course</a>
-            </div>
+        <div class="hbox pb-3">
+            <a href="{% url 'course-update' object.id %}" class="btn btn-secondary">Update Course</a>
+            <a href="{% url 'course-delete' object.id %}" class="btn btn-danger">Delete Course</a>
         </div>
     </div>
 
-    <div class="content-body">
-        <div class="row content-padding">
-            <!-- Chapter List Column -->
-            <div class="col-md-12">
-                {% include "planner/chapter/chapter_list.html" %}
+    <!-- Content Section -->
+    <div class="p-3">
+        <div class="content-body">
+            <div class="row content-padding">
+                <!-- Chapter List Column -->
+                <div class="col-md-12">
+                    {% include "planner/chapter/chapter_list.html" %}
+                </div>
             </div>
         </div>
     </div>

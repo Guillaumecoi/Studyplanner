@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
@@ -22,6 +23,7 @@ class Course(models.Model):
     def save(self, *args, **kwargs):
         if self.completed and not self.date_completed:
             self.date_completed = timezone.now()
+        super().save(*args, **kwargs)
     
     def get_absolute_url(self):
         return reverse('course-detail', kwargs={'pk': self.pk})
@@ -36,7 +38,7 @@ class Chapter(models.Model):
     pages = models.IntegerField(null=True, blank=True)
     pages_completed = models.IntegerField(default=0)
     time_estimated = models.DurationField(default=timedelta(0), null=True, blank=True)
-    time_spent = models.DurationField(default=timedelta(0))
+    time_spent = models.DurationField(default=timedelta(0), null=True, blank=True)
     slides = models.IntegerField(null=True, blank=True)
     slides_completed = models.IntegerField(default=0)
     progress = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
@@ -56,11 +58,13 @@ class Chapter(models.Model):
             max_order = Chapter.objects.filter(course=self.course, parent_chapter=self.parent_chapter).aggregate(models.Max('order'))['order__max']
             if max_order is not None:
                 self.order = max_order + 1
+                
+        # Update the course's date_modified
+        update_modifieddate(self.course)
         
-        if self.completed and not self.date_completed:
-            self.date_completed = timezone.now()
-        self.course.date_modified = timezone.now()
-        self.course.save()
+        # If the chapter is marked as completed, call the complete method before saving.
+        if self.completed:
+            self.complete()
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
@@ -70,6 +74,14 @@ class Chapter(models.Model):
         
     def get_absolute_url(self):
         return reverse('course-detail', kwargs={'pk': self.course.pk})
+    
+    def complete(self):
+        if not self.date_completed or self.date_completed > timezone.now():
+            self.date_completed = timezone.now().date()
+        self.pages_completed = self.pages
+        self.slides_completed = self.slides
+        self.progress = 100
+        
     
 class StudySession(models.Model):
     chapter = models.ForeignKey(Chapter, on_delete=models.CASCADE)
@@ -84,6 +96,8 @@ class StudySession(models.Model):
     def save(self, *args, **kwargs):
         self.chapter.time_spent += self.time_spent
         self.chapter.save()
+        update_modifieddate(self.chapter.course)
+        self.date = timezone.now().date()
         super().save(*args, **kwargs)
         
     def delete(self, *args, **kwargs):
@@ -107,8 +121,7 @@ class Task(models.Model):
         return self.title
     
     def save(self, *args, **kwargs):
-        self.course.date_modified = timezone.now()
-        self.course.save()
+        update_modifieddate(self.course)
         super().save(*args, **kwargs)
     
 class Deadline(models.Model):
@@ -121,6 +134,10 @@ class Deadline(models.Model):
     def __str__(self):
         return self.title
     
+    def save(self, *args, **kwargs):
+        update_modifieddate(self.course)
+        super().save(*args, **kwargs)
+    
 class Milestone(models.Model):
     title = models.CharField(max_length=255)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -132,6 +149,15 @@ class Milestone(models.Model):
     
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+        update_modifieddate(self.course)
+        super().save(*args, **kwargs)
+    
+    
+def update_modifieddate(course):
+    course.date_modified = timezone.now()
+    course.save()
     
 
     

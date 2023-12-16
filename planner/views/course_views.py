@@ -27,8 +27,8 @@ class CourseListView(LoginRequiredMixin, ListView):
         
 class CourseCreateView(LoginRequiredMixin, CreateView):
     model = Course
-    template_name = 'planner/course/course_form.html'
-    fields = ['title', 'instructor', 'description', 'study_points']
+    template_name = 'planner/course/course_addform.html'
+    fields = ['title', 'instructor', 'study_points']
     
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -36,8 +36,8 @@ class CourseCreateView(LoginRequiredMixin, CreateView):
 
 class CourseUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Course
-    template_name = 'planner/course/course_form.html'
-    fields = ['title', 'instructor', 'description', 'study_points', 'completed']
+    template_name = 'planner/course/course_updateform.html'
+    fields = ['title', 'instructor', 'study_points']
     
     def form_valid(self, form):
         if form.instance.completed:
