@@ -1,19 +1,20 @@
 {% extends "planner/base.html" %}
 {% load static %}
 {% load humanize %}
+{% load bootstrap_icons %}
 {% block content %}
-    <!-- Header Section -->
-    <div class="content-header">
-        <div class="header-left">
-            <h3>Course Tracker</h3>
-            <p>Select your course and track your progress</p>
-        </div>
-        <div class="header-right">
-            <a href="{% url 'course-create' %}" class="btn btn-secondary">Add Course</a>
-        </div>
+<!-- Header Section -->
+<div class="d-flex justify-content-between align-items-end px-5 undershadow">
+    <div class="d-flex flex-column">
+        <h3>Course Tracker</h3>
+        <p>Select your course and track your progress</p>
     </div>
+    <div class="pb-3">
+        <a href="{% url 'course-create' %}" class="btn btn-primary"> {% bs_icon "file-earmark-plus-fill" %}</a>
+    </div>
+</div>
 
-    <!-- Table Section for Courses -->
+<!-- Table Section for Courses -->
 <div class="content-padding">
     <div class="table-responsive content-section">
         <table class="table" id="coursesTable">

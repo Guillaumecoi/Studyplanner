@@ -24,40 +24,50 @@
 <body>
     <div class="container-fluid">
       <div class="row">
-        <!-- Sidebar -->
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light collapse" style="position: fixed; height: 100%; overflow: auto; z-index: 1030;">
-          <div class="position-sticky pt-5">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link active d-flex align-items-center" aria-current="page" href="{% url 'planner-home' %}">
+        <!-- Column for Navbar and Main Content -->
+        <div class="col-md-12 px-md-4">
+          <!-- Navbar -->
+          <nav class="navbar navbar-expand-md navbar-light undershadow mb-3 px-3 fixed-top">
+            <div class="d-flex justify-content-between w-100">
+              <div class="navbar-nav">
+                <a class="nav-link btn btn-link pb-0" aria-current="page" href="#">
                   {% bs_icon "house-fill" %} Home
                 </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="admin/">Admin</a>
-              </li>
-              <!-- Add more sidebar items here -->
-            </ul>
-          </div>
-        </nav>
-
-        <!-- Column for Navbar and Main Content -->
-        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-          <!-- Navbar -->
-          <nav class="navbar navbar-expand-md navbar-light">
-            <!-- Navbar content -->
-            <div class="navbar-nav ml-auto">
+                {% if user.is_authenticated %}
+                  <a class="nav-link btn btn-link pb-0" aria-current="page" href="{% url 'planner-home' %}">
+                    {% bs_icon "book-fill" %} Courses
+                  </a>
+                  <a class="nav-link btn btn-link pb-0" aria-current="page" href="#">
+                    {% bs_icon "list-task" %} Tasks
+                  </a>
+                  <a class="nav-link btn btn-link pb-0" aria-current="page" href="#">
+                    {% bs_icon "clock-fill" %} Deadlines
+                  </a>
+                  <a class="nav-link btn btn-link pb-0" aria-current="page" href="#">
+                    {% bs_icon "calendar" %} Calendar
+                  </a>
+                  <a class="nav-link btn btn-link pb-0" aria-current="page" href="#">
+                    {% bs_icon "graph-up" %} Statistics
+                  </a>
+                {% endif %}
+              </div>
+              <div class="navbar-nav">
+                <!-- Navbar content -->
                 <!-- Conditional rendering based on authentication -->
                 {% if user.is_authenticated %}
-                    <a class="nav-link btn btn-link" href="{% url 'profile' %}"> {% bs_icon "person-circle" %} Profile</a>
-                    <form class="nav-item" action="{% url 'logout' %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="nav-link btn btn-link">{% bs_icon "box-arrow-left" %} Logout</button>
-                    </form>
+                  <a class="nav-link btn btn-link" href="{% url 'profile' %}"> {% bs_icon "person-circle" %} Profile</a>
+                  <a class="nav-link btn btn-link pb-0" aria-current="page" href="#">
+                    {% bs_icon "gear-fill" %} Settings
+                  </a>
+                  <form class="nav-item m-0 p-0" action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link btn btn-link">{% bs_icon "box-arrow-left" %} Logout</button>
+                  </form>
                 {% else %}
-                    <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                    <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                  <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                  <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
                 {% endif %}
+              </div>
             </div>
           </nav>
         
