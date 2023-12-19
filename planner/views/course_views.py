@@ -71,13 +71,3 @@ class CourseDetailView(UserPassesTestMixin, DetailView):
         if self.request.user == course.user:
             return True
         return False
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        course = self.get_object()
-        
-        # Get chapters related to the course
-        chapters = Chapter.objects.filter(course=course).order_by('order')
-        context['chapters'] = chapters
-        
-        return context

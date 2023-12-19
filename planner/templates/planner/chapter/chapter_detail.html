@@ -31,3 +31,11 @@
         </div>
     {% endif %}
 </div>
+
+<div class="container mt-5 pb-3 d-flex justify-content-between">
+    <a href="{% url 'chapter-complete' object.course.id object.id %}" class="btn btn-success btn-sm">Complete Chapter</a>
+    <div>
+        <a href="{% url 'studysession-create' object.course.id object.id %}" class="btn btn-primary btn-sm mr-2">Add Study Session</a>        
+        <button type="button" class="btn btn-secondary btn-sm">View Study Sessions</button>
+    </div>
+</div>

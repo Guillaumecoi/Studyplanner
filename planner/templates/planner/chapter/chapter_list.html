@@ -1,113 +1,57 @@
+{% load static %}
+{% load bootstrap_icons %}
+<!-- Information -->
+<div baseurl="{% url 'chapter-detail' course.id 0 %}" id="chapterDetailUrlBase"></div>
+<div course-id="{{ course.id }}" id="parentCourse"></div>
+
 <div class="content-body">
-    <div class="row content-padding">
+    <div class="row">
+        <!-- ChaptersList Section -->
         <div class="col-md-6 pr-5">
             <div class="content-section pt-3">
-                <!-- Information -->
-                <div data-base-detail-url="{% url 'chapter-detail' course.id 0 %}" id="chapterDetailUrlBase"></div>
-
 
                 <!-- Header Section -->
-                <div class="content-header">
-                    <div class="header-left">
+                <div class="d-flex justify-content-between align-items-end px-5 undershadow">
+                    <div class="d-flex flex-column">
                         <h3>Chapters</h3>
                     </div>
-                    <div class="header-right">
+                    <div class="pb-3">
                         <button id="createChapterButton" class="btn btn-sm btn-primary"
-                            data-course-id="{{ course.id }}"
-                            data-base-url="{% url 'chapter-create' course.id %}">
-                            +
+                        data-base-url="{% url 'chapter-create' course.id %}">
+                            {% bs_icon "file-earmark-plus-fill" %}
                         </button>
                     </div>
                 </div>
 
-                {% if chapters %}
-                    <!-- Table Section for Chapters -->
-                    <div class="content-padding">
-                        <div class="table-responsive content-section">
-                            <table class="table" id="chaptersTable">
-                                <!-- Table Head -->
-                                <thead>
-                                    <tr>
-                                        <th style="width: 15%;">Nr</th>
-                                        <th style="width: 45%;">Title</th>
-                                        <th style="width: 25%;">Progress</th>
-                                        <th style="width: 15%;">Actions</th>
-                                    </tr>
-                                </thead>
-                                <!-- Table Body -->
-                                <tbody>
-                                    {% for chapter in chapters %}
-                                        <tr class="selectable-row" data-chapter-key="{{ chapter.id }}">
-                                            <td>{{ chapter.order }}</td>
-                                            <td>{{ chapter.title }}</td>
-                                            <td>{{ chapter.progress }}%</td>
-                                            <td>
-                                                <a href="{% url 'chapter-update' course.id chapter.id %}" class="btn btn-sm btn-primary">🖉</a>
-                                                <a href="{% url 'chapter-delete' course.id chapter.id %}" class="btn btn-sm btn-danger">🗑</a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                <!-- Table Section for Chapters -->
+                <div class="p-3">
+                    <div class="table-responsive content-section">
+                        <table class="table" id="chaptersTable">
+                            <!-- Table Head -->
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 8%;">Done</th>
+                                    <th class="text-center" style="width: 5%;">Nr</th>
+                                    <th style="width: 45%;">Title</th>
+                                    <th class="text-center" style="width: 25%;">Progress</th>
+                                    <th class="text-center" >Actions</th>
+                                </tr>
+                            </thead>
+                            <!-- Table Body -->
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
-                {% else %}
-                    <div class="content-padding">
-                        <p>No chapters available.</p>
-                    </div>
-                {% endif %}
-                
-                
-                
-                <script>
-                    function loadChapterForm(courseId) {
-                        var baseUrl = document.getElementById('createChapterButton').getAttribute('data-base-url');
-                    
-                        fetch(baseUrl)
-                            .then(response => response.text())
-                            .then(html => {
-                                document.getElementById('formColumn').innerHTML = html;
-                                var form = formColumn.querySelector('form');
-                                form.setAttribute('action', baseUrl);
-                            });
-                    }
-                    
-                    document.addEventListener('DOMContentLoaded', function() {
-                        var createChapterButton = document.getElementById('createChapterButton');
-                        var courseId = createChapterButton.getAttribute('data-course-id');
-                        var rows = document.querySelectorAll('#chaptersTable .selectable-row');
-                        var baseUrl = document.getElementById('chapterDetailUrlBase').getAttribute('data-base-detail-url');
-
-                        loadChapterForm(courseId);
-
-                        createChapterButton.addEventListener('click', function() {
-                            loadChapterForm(courseId);
-                            rows.forEach(function(r) { r.classList.remove('selected-row'); });
-                        });
-
-                        rows.forEach(function(row) {
-                            row.addEventListener('click', function() {
-                                // Add selected class to clicked row and remove from others
-                                rows.forEach(function(r) { r.classList.remove('selected-row'); });
-                                this.classList.add('selected-row');
-
-                                // Fetch the detail view for the selected chapter
-                                var chapterId = this.getAttribute('data-chapter-key');
-                                var detailUrl = baseUrl.replace('0', `${chapterId}`);
-                                fetch(detailUrl)
-                                    .then(response => response.text())
-                                    .then(html => {
-                                        document.getElementById('formColumn').innerHTML = html;
-                                    });
-                            });
-                        });
-                    });
-                </script>
+                </div>
             </div>
         </div>
-
+        
         <!-- Form Column -->
-        <div class="col-md-6 content-section" id="formColumn"></div>
+        <div class="col-md-6 content-section p-3" id="formColumn"></div>
     </div>
+
+    <script src="{% static 'planner/js/chapterManagement.js' %}"></script>
+    
 </div>
+
 

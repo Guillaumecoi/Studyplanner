@@ -36,11 +36,11 @@ class Chapter(models.Model):
     order = models.IntegerField(default=1)
     content = models.TextField()
     pages = models.IntegerField(null=True, blank=True)
-    pages_completed = models.IntegerField(default=0)
+    pages_completed = models.IntegerField(null=True, blank=True)
     time_estimated = models.DurationField(default=timedelta(0), null=True, blank=True)
     time_spent = models.DurationField(default=timedelta(0), null=True, blank=True)
     slides = models.IntegerField(null=True, blank=True)
-    slides_completed = models.IntegerField(default=0)
+    slides_completed = models.IntegerField(null=True, blank=True)
     progress = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     completed = models.BooleanField(default=False)
     date_completed = models.DateTimeField(null=True, blank=True)
@@ -62,9 +62,6 @@ class Chapter(models.Model):
         # Update the course's date_modified
         update_modifieddate(self.course)
         
-        # If the chapter is marked as completed, call the complete method before saving.
-        if self.completed:
-            self.complete()
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
@@ -76,11 +73,18 @@ class Chapter(models.Model):
         return reverse('course-detail', kwargs={'pk': self.course.pk})
     
     def complete(self):
-        if not self.date_completed or self.date_completed > timezone.now():
-            self.date_completed = timezone.now().date()
+        self.completed = True
+        self.date_completed = timezone.now()
         self.pages_completed = self.pages
         self.slides_completed = self.slides
         self.progress = 100
+        
+    def uncomplete(self):
+        self.completed = False
+        self.date_completed = None
+        self.pages_completed = 0
+        self.slides_completed = 0
+        self.progress = 0
         
     
 class StudySession(models.Model):
