@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image # Resize image using Pillow
-import io
-from django.core.files.uploadedfile import InMemoryUploadedFile
+
+from planner.models.settings import UserSettings
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) #if user is deleted, delete profile
@@ -12,7 +12,11 @@ class Profile(models.Model):
         return f'{self.user.username} Profile'
     
     def save(self, *args, **kwargs):
+        is_new = self._state.adding  # Must be checked before saving
         super().save(*args, **kwargs)
+
+        if is_new:
+            UserSettings.objects.create(user=self.user)
         
         img = Image.open(self.image)
         # Resize image to 300x300 if it is larger than that
