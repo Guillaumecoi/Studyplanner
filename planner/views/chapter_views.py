@@ -6,7 +6,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.http import HttpResponseRedirect, JsonResponse
 from django.core import serializers
 
-from planner.models import Course, Chapter
+from planner.models.course import Course
+from planner.models.chapter import Chapter
 from planner.views.view_helper_methods import check_user_course_permission
     
 class ChapterDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):

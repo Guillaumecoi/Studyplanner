@@ -1,6 +1,6 @@
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
-from planner.models import Course
+from planner.models.course import Course
 
 def check_user_course_permission(request, course_id):
     course = get_object_or_404(Course, id=course_id)
