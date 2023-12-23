@@ -51,7 +51,7 @@ function deselectAllRows() {
 
 function updateChaptersTable(courseId) {
     $.ajax({
-        url: `/api/course/${courseId}/chapters/`,
+        url: `api/getchapters/`,
         type: 'GET',
         dataType: 'json',
         success: function(data) {
@@ -124,7 +124,6 @@ function checkboxChangeHandler() {
 }
 
 
-//Chapter Create Form
 function loadChapterCreateForm() {
     var baseUrl = document.getElementById('createChapterButton').getAttribute('data-base-url');
 
@@ -139,9 +138,7 @@ function loadChapterCreateForm() {
 
 
 function fetchChapterDetail(chapterId) {
-    var baseUrl = document.getElementById('chapterDetailUrlBase').getAttribute('baseurl');
-    var detailUrl = baseUrl.replace('0', `${chapterId}`);
-    fetch(detailUrl)
+    fetch(`chapter/${chapterId}/`)
         .then(response => response.text())
         .then(html => {
             document.getElementById('formColumn').innerHTML = html;
@@ -151,7 +148,7 @@ function fetchChapterDetail(chapterId) {
 function completeChapter(courseId, chapterId) {
     let csrftoken = getCookie('csrftoken');
 
-    fetch(`/course/${courseId}/chapter/${chapterId}/complete/`, {
+    fetch(`api/completechapter/${chapterId}/`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',

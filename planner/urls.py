@@ -17,8 +17,8 @@ chapter_urlpatterns = [
     path('course/<int:parent_course_id>/chapter/new/', ChapterCreateView.as_view(), name='chapter-create'),
     path('course/<int:parent_course_id>/chapter/<int:pk>/update/', ChapterUpdateView.as_view(), name='chapter-update'),
     path('course/<int:parent_course_id>/chapter/<int:pk>/delete/', ChapterDeleteView.as_view(), name='chapter-delete'),
-    path('course/<int:parent_course_id>/chapter/<int:pk>/complete/', ChapterCompleteView.as_view(), name='chapter-complete'),
-    path('api/course/<int:parent_course_id>/chapters/', get_chapters, name='get_chapters'),
+    path('course/<int:parent_course_id>/api/completechapter/<int:chapter_id>/', toggle_chapter_completion, name='chapter-complete'),
+    path('course/<int:parent_course_id>/api/getchapters/', get_chapters, name='get_chapters'),
 ]
 
 study_session_urlpatterns = [

@@ -29,3 +29,6 @@ class Course(models.Model):
     def modified(self):
         self.date_modified = timezone.now()
         self.save()
+        
+    def has_access(self, user):
+        return self.user == user
