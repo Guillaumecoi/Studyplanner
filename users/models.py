@@ -5,7 +5,7 @@ from PIL import Image # Resize image using Pillow
 from planner.models.settings import UserSettings
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE) #if user is deleted, delete profile
+    user = models.OneToOneField(User, on_delete=models.CASCADE) 
     image = models.ImageField(default='profile_pics/default.png', upload_to='profile_pics')
     
     def __str__(self):

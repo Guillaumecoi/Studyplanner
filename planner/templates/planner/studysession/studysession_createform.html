@@ -1,0 +1,83 @@
+{% extends "planner/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<div class="container mt-5 content-section">
+    <!-- Display Course and Chapter Name -->
+    <div class="p-3 undershadow mb-4">
+        <h1>{{ course.title }}</h1>
+        <h3>Chapter {{chapter.order}}: {{ chapter.title }}</h3>
+        <!-- Explanatory Note -->
+        <div class="alert alert-info p-1" role="alert">
+            <strong>Note:</strong> When you complete a chapter, be sure to submit your study session and then start a new one for the next chapter.
+        </div>
+    </div>
+
+    <div class="pb-3">
+        <div class="d-flex flex-column mt-4">
+            <span id="time" class="d-flex justify-content-center display-1 font-weight-bold p-3"></span>
+            <div class="d-flex justify-content-center gap-3">
+                <button id="btn-start" class="btn btn-success d-block">Start</button>
+                <button id="btn-pause" class="btn btn-danger d block d-none">Pause</button>
+                <button id="btn-reset" class="btn btn-secondary d-block">Reset</button>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <button id="btn-stop" class="btn btn-primary d-block" style="max-width: 200px;">Submit Time</button>
+            </div>
+        </div>
+    </div>
+
+    <form id="studySessionForm" method="post" class="p-3">
+        {% csrf_token %}
+        <!-- Display Non-Field Errors -->
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <fieldset class="mb-4">
+            <legend class="undershadow mb-4">Session Details</legend>
+        
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="timeSpent">Time Spent</label>
+                    <input type="text" name="time_spent" id="timeSpent" class="form-control" value="{{ form.time_spent.value }}">
+                    {% for error in form.time_spent.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% if chapter.pages > 0 %}
+                    <div class="col-md-4 mb-3">
+                        <label for="pagesDone">Pages Completed ({{ remaining_pages }} remaining)</label>
+                        <input type="number" name="pages_done" id="pagesDone" class="form-control" value="{{ form.pages_done.value }}">
+                        {% for error in form.pages_done.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if chapter.slides > 0 %}
+                    <div class="col-md-4 mb-3">
+                        <label for="slidesDone">Slides Completed ({{ remaining_slides }} remaining)</label>
+                        <input type="number" name="slides_done" id="slidesDone" class="form-control" value="{{ form.slides_done.value }}">
+                        {% for error in form.slides_done.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </fieldset>
+        
+
+        <div class="text-end pb-3">
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+    </form>
+
+</div>
+
+<script src="{% static 'planner/js/timer.js' %}"></script>
+{% endblock content %}

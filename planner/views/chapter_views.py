@@ -1,10 +1,9 @@
-from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
-from django.views.decorators.http import require_POST, require_GET
+from django.views.generic import DetailView, CreateView, UpdateView
+from django.views.decorators.http import require_POST, require_GET, require_http_methods
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
 from django.core import serializers
 
@@ -18,6 +17,12 @@ class ChapterDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     def test_func(self):
         chapter = self.get_object()
         return chapter.course.has_access(self.request.user)
+    
+    def get_context_data(self, **kwargs):
+        chapter = self.get_object()
+        context = super().get_context_data(**kwargs)
+        context['time_spent_percentage'] = min((chapter.time_spent / chapter.time_estimated if chapter.time_estimated else 0), 1) * 100  # Time progress cannot be greater than 100
+        return context
 
 class ChapterCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Chapter
@@ -43,40 +48,45 @@ class ChapterUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         chapter = self.get_object()
         return chapter.course.has_access(self.request.user)
     
-class ChapterDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Chapter
-    template_name = 'planner/chapter/chapter_confirm_delete.html'
-    
-    def test_func(self):
-        chapter = self.get_object()
-        return chapter.course.has_access(self.request.user)
-    
-    def get_success_url(self) -> str:
-        chapter = self.get_object()
-        return reverse('course-detail', args=[str(chapter.course.id)])
 
 @login_required
-@require_POST
-def toggle_chapter_completion(request, parent_course_id, chapter_id):
-    # Get the chapter
-    chapter = get_object_or_404(Chapter, id=chapter_id)
-    
-    #check that chapter belongs to the course
-    if chapter.course.id != parent_course_id:
-        raise ValidationError('This chapter does not belong to the specified course')
+@require_http_methods(["DELETE"])
+def delete_chapter(request, pk):
+    chapter = get_object_or_404(Chapter, pk=pk)
 
     # Check if the course belongs to the current user
     if not chapter.course.has_access(request.user):
         raise PermissionDenied('You do not have permission to modify this chapter')
 
-    # Toggle the completion status
-    if chapter.completed:
-        chapter.uncomplete()
-    else:
-        chapter.complete()
+    try:
+        chapter.delete()
+        return JsonResponse({'status': 'success'})
+    except:
+        return JsonResponse({'error'}, status=500)
 
-    # Return a JSON response
-    return JsonResponse({'status': 'success', 'completed': chapter.completed})
+
+@login_required
+@require_POST
+def toggle_chapter_completion(request, pk):
+    # Get the chapter
+    chapter = get_object_or_404(Chapter, pk=pk)
+
+    # Check if the course belongs to the current user
+    if not chapter.course.has_access(request.user):
+        raise PermissionDenied('You do not have permission to modify this chapter')
+
+    try:
+        # Toggle the completion status
+        if chapter.completed:
+            chapter.uncomplete()
+        else:
+            chapter.complete()
+
+        # Return a JSON response
+        return JsonResponse({'status': 'success', 'completed': chapter.completed})
+    except:
+        return JsonResponse({'error': 'Chapter is not complete'}, status=400)
+    
 
 @login_required
 @require_GET

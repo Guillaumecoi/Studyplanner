@@ -46,6 +46,13 @@ h1, h2, h3, h4, h5, h6 {
   vertical-align: text-bottom;
 }
 
+.large-checkbox {
+  width: 20px;  
+  height: 20px; 
+  cursor: pointer;
+}
+
+
 
 /* Table styling */
 th.table-header {
